@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84919C5F1E2A15E400AE35E7 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 84919C5E1E2A15E400AE35E7 /* contact.png */; };
+		84919C651E2A15F400AE35E7 /* WGContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84919C601E2A15F400AE35E7 /* WGContact.swift */; };
+		84919C661E2A15F400AE35E7 /* WGContactGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84919C611E2A15F400AE35E7 /* WGContactGroup.swift */; };
+		84919C671E2A15F400AE35E7 /* WGContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84919C621E2A15F400AE35E7 /* WGContactsView.swift */; };
+		84919C681E2A15F400AE35E7 /* WGContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84919C631E2A15F400AE35E7 /* WGContactViewController.swift */; };
+		84919C691E2A15F400AE35E7 /* WGDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84919C641E2A15F400AE35E7 /* WGDetailViewController.swift */; };
 		84C6846F1E276E1000FD4A05 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C6846E1E276E1000FD4A05 /* AppDelegate.swift */; };
 		84C684711E276E1000FD4A05 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C684701E276E1000FD4A05 /* ViewController.swift */; };
 		84C684741E276E1000FD4A05 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84C684721E276E1000FD4A05 /* Main.storyboard */; };
@@ -34,6 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		84919C5E1E2A15E400AE35E7 /* contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact.png; sourceTree = "<group>"; };
+		84919C601E2A15F400AE35E7 /* WGContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGContact.swift; sourceTree = "<group>"; };
+		84919C611E2A15F400AE35E7 /* WGContactGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGContactGroup.swift; sourceTree = "<group>"; };
+		84919C621E2A15F400AE35E7 /* WGContactsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGContactsView.swift; sourceTree = "<group>"; };
+		84919C631E2A15F400AE35E7 /* WGContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGContactViewController.swift; sourceTree = "<group>"; };
+		84919C641E2A15F400AE35E7 /* WGDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGDetailViewController.swift; sourceTree = "<group>"; };
 		84C6846B1E276E1000FD4A05 /* contacts_swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = contacts_swift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C6846E1E276E1000FD4A05 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84C684701E276E1000FD4A05 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -74,9 +86,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		84919C6A1E2A15FF00AE35E7 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				84919C601E2A15F400AE35E7 /* WGContact.swift */,
+				84919C611E2A15F400AE35E7 /* WGContactGroup.swift */,
+			);
+			name = model;
+			sourceTree = "<group>";
+		};
+		84919C6B1E2A160D00AE35E7 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				84919C621E2A15F400AE35E7 /* WGContactsView.swift */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
+		84919C6C1E2A161F00AE35E7 /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				84919C631E2A15F400AE35E7 /* WGContactViewController.swift */,
+				84919C641E2A15F400AE35E7 /* WGDetailViewController.swift */,
+			);
+			name = controller;
+			sourceTree = "<group>";
+		};
 		84C684621E276E1000FD4A05 = {
 			isa = PBXGroup;
 			children = (
+				84919C5E1E2A15E400AE35E7 /* contact.png */,
 				84C6846D1E276E1000FD4A05 /* contacts_swift */,
 				84C684821E276E1000FD4A05 /* contacts_swiftTests */,
 				84C6848D1E276E1000FD4A05 /* contacts_swiftUITests */,
@@ -97,6 +136,9 @@
 		84C6846D1E276E1000FD4A05 /* contacts_swift */ = {
 			isa = PBXGroup;
 			children = (
+				84919C6C1E2A161F00AE35E7 /* controller */,
+				84919C6B1E2A160D00AE35E7 /* view */,
+				84919C6A1E2A15FF00AE35E7 /* model */,
 				84C6846E1E276E1000FD4A05 /* AppDelegate.swift */,
 				84C684701E276E1000FD4A05 /* ViewController.swift */,
 				84C684721E276E1000FD4A05 /* Main.storyboard */,
@@ -193,7 +235,6 @@
 				TargetAttributes = {
 					84C6846A1E276E1000FD4A05 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = R96Z66JW5H;
 						ProvisioningStyle = Automatic;
 					};
 					84C6847E1E276E1000FD4A05 = {
@@ -237,6 +278,7 @@
 			files = (
 				84C684791E276E1000FD4A05 /* LaunchScreen.storyboard in Resources */,
 				84C684761E276E1000FD4A05 /* Assets.xcassets in Resources */,
+				84919C5F1E2A15E400AE35E7 /* contact.png in Resources */,
 				84C684741E276E1000FD4A05 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,6 +305,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				84C684711E276E1000FD4A05 /* ViewController.swift in Sources */,
+				84919C681E2A15F400AE35E7 /* WGContactViewController.swift in Sources */,
+				84919C651E2A15F400AE35E7 /* WGContact.swift in Sources */,
+				84919C691E2A15F400AE35E7 /* WGDetailViewController.swift in Sources */,
+				84919C661E2A15F400AE35E7 /* WGContactGroup.swift in Sources */,
+				84919C671E2A15F400AE35E7 /* WGContactsView.swift in Sources */,
 				84C6846F1E276E1000FD4A05 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,7 +460,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = R96Z66JW5H;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = contacts_swift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Wind.contacts-swift";
@@ -426,7 +473,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = R96Z66JW5H;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = contacts_swift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Wind.contacts-swift";
@@ -512,6 +559,7 @@
 				84C684951E276E1000FD4A05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84C684961E276E1000FD4A05 /* Build configuration list for PBXNativeTarget "contacts_swiftTests" */ = {
 			isa = XCConfigurationList;
@@ -520,6 +568,7 @@
 				84C684981E276E1000FD4A05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84C684991E276E1000FD4A05 /* Build configuration list for PBXNativeTarget "contacts_swiftUITests" */ = {
 			isa = XCConfigurationList;
@@ -528,6 +577,7 @@
 				84C6849B1E276E1000FD4A05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
