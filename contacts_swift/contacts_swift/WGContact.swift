@@ -8,25 +8,53 @@
 
 import UIKit
 
-struct birthdayStruct {
-    var year: Int = 2017
-    var month: Int = 1
-    var day: Int = 13
-}
 
 struct dicStruct {
     var indexArr: [String] = []
     var value: [String: String] = [:]
 }
 
-class WGContact: NSObject {
+class simpleModel: NSObject,NSCoding {
+    
+    let key_indexArr = "m_indexArr"
+    let key_value = "m_value"
+    
+    var indexArr: [String]?
+    var value: [String: String]?
+    
+    init(indexArr: [String], value: [String: String]) {
+        super.init()
+        self.indexArr = indexArr
+        self.value = value
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init()
+        indexArr = aDecoder.decodeObject(forKey: key_indexArr) as? [String]
+        value = aDecoder.decodeObject(forKey: key_value) as? [String : String]
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(indexArr, forKey: key_indexArr)
+        aCoder.encode(value, forKey: key_value)
+    }
+}
+
+class WGContact: NSObject,NSCoding {
+    
+    let key_name = "c_name"
+    let key_address = "c_address"
+    let key_image = "c_image"
+    let key_phoneNum = "c_phoneNum"
+    let key_email = "c_email"
+    let key_birthday = "c_birthday"
     
     var name: String!
     var address: String?
     var image: UIImage?
-    var phoneNum: dicStruct = dicStruct()
-    var email: dicStruct = dicStruct()
-    var birthday: birthdayStruct = birthdayStruct()
+    var phoneNum: simpleModel?
+    var email: simpleModel?
+    var birthday: [String: Int]?
     var group: String {
         return self.getGroupName()
     }
@@ -38,29 +66,30 @@ class WGContact: NSObject {
     init(name: String) {
         super.init()
         self.name = name
-        self.image = UIImage.init(named: "contact.png")
-        self.phoneNum.indexArr = ["phone1","phone2","phone3"]
-        self.phoneNum.value[self.phoneNum.indexArr[0]] = ""
-        self.email.indexArr = ["email1","email2"]
-        self.email.value[self.email.indexArr[0]] = ""
+        address = "xian"
+        image = UIImage.init(named: "contact.png")
+        phoneNum = simpleModel.init(indexArr: ["phone1","phone2","phone3"], value: ["phone1": ""])
+        email = simpleModel.init(indexArr: ["email1","email2","email3"], value: ["email": ""])
+        birthday = ["year": 2017, "month": 1, "day": 13]
     }
     
-    init(coder aDecoder: NSCoder!) {
-        self.name = (aDecoder.decodeObject(forKey: "name") as? String)!
-        self.image = aDecoder.decodeObject(forKey: "image") as? UIImage
-        self.address = aDecoder.decodeObject(forKey: "address") as? String
-        self.birthday = (aDecoder.decodeObject(forKey: "birthday") as? birthdayStruct)!
-        self.phoneNum = (aDecoder.decodeObject(forKey: "phoneNum") as? dicStruct)!
-        self.email = (aDecoder.decodeObject(forKey: "email") as? dicStruct)!
+    required init(coder aDecoder: NSCoder) {
+        super.init()
+        name = (aDecoder.decodeObject(forKey: key_name) as? String)!
+        image = aDecoder.decodeObject(forKey: key_image) as? UIImage
+        address = aDecoder.decodeObject(forKey: key_address) as? String
+        birthday = aDecoder.decodeObject(forKey: key_birthday) as? [String : Int]
+        phoneNum = aDecoder.decodeObject(forKey: key_phoneNum) as? simpleModel
+        email = aDecoder.decodeObject(forKey: key_email) as? simpleModel
     }
     
-    func encode(aCoder: NSCoder!) {
-        aCoder.encode(name, forKey: "name")
-        aCoder.encode(image, forKey: "image")
-        aCoder.encode(address, forKey: "address")
-        aCoder.encode(birthday, forKey: "birthday")
-        aCoder.encode(phoneNum, forKey: "phoneNum")
-        aCoder.encode(email, forKey: "email")
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(name, forKey: key_name)
+        aCoder.encode(image, forKey: key_image)
+        aCoder.encode(address, forKey: key_address)
+        aCoder.encode(birthday, forKey: key_birthday)
+        aCoder.encode(phoneNum, forKey: key_phoneNum)
+        aCoder.encode(email, forKey: key_email)
     }
     
     class func getContactsPath() -> String {
@@ -68,26 +97,32 @@ class WGContact: NSObject {
         return path + "/contacts.plist"
     }
     
-    class func saveData(contacts: [String: [WGContactGroup]]) -> Bool {
-        let data = NSMutableData()
-        let archiver = NSKeyedArchiver(forWritingWith: data)
-        archiver.encode(contacts, forKey: "key_contacts")
-        archiver.finishEncoding()
-        return data.write(toFile: getContactsPath(), atomically: true)
+    class func saveData(contacts: [String: WGContactGroup]) -> Bool {
+//        let data = NSMutableData()
+//        let archiver = NSKeyedArchiver(forWritingWith: data)
+//        archiver.encode(contacts, forKey: "key_contacts")
+//        archiver.finishEncoding()
+//        return data.write(toFile: getContactsPath(), atomically: true)
+        
+        return NSKeyedArchiver.archiveRootObject(contacts, toFile: getContactsPath())
     }
     
-    class func loadData() -> [String: [WGContactGroup]] {
-        let fileManager = FileManager()
-        var contacts: [String: [WGContactGroup]] = [:]
+    class func loadData() -> [String: WGContactGroup] {
+        //let fileManager = FileManager()
+        var contacts: [String: WGContactGroup] = [:]
         
-        if fileManager.fileExists(atPath: getContactsPath()) {
-            let url = URL.init(string: getContactsPath())
-            let data = try! Data(contentsOf: url!)
-            
-            let unArchiver = NSKeyedUnarchiver(forReadingWith: data)
-            contacts = unArchiver.decodeObject(forKey: "key_contacts") as! [String : [WGContactGroup]]
-            unArchiver.finishDecoding()
+        if NSKeyedUnarchiver.unarchiveObject(withFile: getContactsPath()) != nil {
+            contacts = NSKeyedUnarchiver.unarchiveObject(withFile: getContactsPath()) as! [String : WGContactGroup]
         }
+        
+//        if fileManager.fileExists(atPath: getContactsPath()) {
+//            let url = URL.init(string: getContactsPath())
+//            let data = try! Data.init(contentsOf: url!, options: Data.ReadingOptions.alwaysMapped)
+//            
+//            let unArchiver = NSKeyedUnarchiver(forReadingWith: data)
+//            contacts = unArchiver.decodeObject(forKey: "key_contacts") as! [String : WGContactGroup]
+//            unArchiver.finishDecoding()
+//        }
         
         return contacts
     }
