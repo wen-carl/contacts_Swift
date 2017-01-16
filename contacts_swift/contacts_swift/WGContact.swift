@@ -16,8 +16,8 @@ struct dicStruct {
 
 class simpleModel: NSObject,NSCoding {
     
-    let key_indexArr = "m_indexArr"
-    let key_value = "m_value"
+    fileprivate let key_indexArr = "m_indexArr"
+    fileprivate let key_value = "m_value"
     
     var indexArr: [String]?
     var value: [String: String]?
@@ -42,12 +42,12 @@ class simpleModel: NSObject,NSCoding {
 
 class WGContact: NSObject,NSCoding {
     
-    let key_name = "c_name"
-    let key_address = "c_address"
-    let key_image = "c_image"
-    let key_phoneNum = "c_phoneNum"
-    let key_email = "c_email"
-    let key_birthday = "c_birthday"
+    fileprivate let key_name = "c_name"
+    fileprivate let key_address = "c_address"
+    fileprivate let key_image = "c_image"
+    fileprivate let key_phoneNum = "c_phoneNum"
+    fileprivate let key_email = "c_email"
+    fileprivate let key_birthday = "c_birthday"
     
     var name: String!
     var address: String?
@@ -97,7 +97,7 @@ class WGContact: NSObject,NSCoding {
         return path + "/contacts.plist"
     }
     
-    class func saveData(contacts: [String: WGContactGroup]) -> Bool {
+    class func saveData(_ contacts: [String: WGContactGroup]) -> Bool {
 //        let data = NSMutableData()
 //        let archiver = NSKeyedArchiver(forWritingWith: data)
 //        archiver.encode(contacts, forKey: "key_contacts")

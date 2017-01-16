@@ -235,17 +235,20 @@
 				TargetAttributes = {
 					84C6846A1E276E1000FD4A05 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					84C6847E1E276E1000FD4A05 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = R96Z66JW5H;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 84C6846A1E276E1000FD4A05;
 					};
 					84C684891E276E1000FD4A05 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = R96Z66JW5H;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 84C6846A1E276E1000FD4A05;
 					};

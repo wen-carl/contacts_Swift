@@ -8,6 +8,10 @@
 
 import UIKit
 
+@objc protocol WGContactsViewDelegate {
+    @objc optional func contactsView(_ contactsView: WGContactsView, didSelect contact: WGContact, and index: Int) -> Void
+}
+
 class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     var allContacts: [String: WGContactGroup]?
@@ -15,11 +19,11 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
     var searchBar: UISearchBar!
     var resultArr: [WGContact]?
     var isSearching: Bool?
+    var delegate: WGContactsViewDelegate?
     var indexArr: [String] {
         //return allContacts?.keys.sorted(by: { (key1: String, key2: String) -> Bool in
         //    return key1.compare(key2)
         //})
-        
         return (allContacts?.keys.sorted())!
     }
     
@@ -45,13 +49,13 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
             groups[first] = group
         }
         
-        let _ = WGContact.saveData(contacts: groups)
+        let _ = WGContact.saveData(groups)
     }
     
     func getPhoneNumber() -> String {
         let second = ["3", "5", "7", "8", "9"]
         var numbers: String = ""
-        for _ in 0...9 {
+        for _ in 0...8 {
             let number = arc4random() % 10
             numbers += "\(number)"
         }
@@ -75,6 +79,7 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
         
         isSearching = false
         searchBar = UISearchBar.init(frame: CGRect.init(x: 0, y: 0, width: frame.size.width, height: 50))
+        searchBar.showsCancelButton = false
         searchBar.delegate = self
         self.addSubview(searchBar)
         
@@ -88,28 +93,128 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
         fatalError("init(coder:) has not been implemented")
     }
     
+    func getContact(indexPath: IndexPath) -> WGContact {
+        return (allContacts![(indexArr[indexPath.section])]?.contacts?[indexPath.row])!
+    }
+    
+    //////////////////////////////////////////////////////
+    // UITabview Datasource                             //
+    //////////////////////////////////////////////////////
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return indexArr.count
+        return isSearching! ? 1 : indexArr.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let key = indexArr[section]
-        return (allContacts![key]?.contacts?.count)!
+        return isSearching! ? (resultArr?.count)! : (allContacts![indexArr[section]]?.contacts?.count)!
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return isSearching! ? nil : indexArr[section]
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //var cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "---")!
+        let identifier = "default_cell"
         
-//        if cell == nil {
-//            cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: "---")
-//        }
-        let cell: UITableViewCell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+        var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: identifier)
         
+        if cell == nil {
+            cell = UITableViewCell.init(style: UITableViewCellStyle.value1, reuseIdentifier: identifier)
+            cell?.accessoryType = UITableViewCellAccessoryType.detailDisclosureButton
+        }
         
+        let contact: WGContact = isSearching! ? resultArr![indexPath.row] : getContact(indexPath: indexPath)
+        cell?.textLabel?.text = contact.name
+        cell?.detailTextLabel?.text = contact.phoneNum?.value?[(contact.phoneNum?.indexArr?[0])!]
         
-        return cell
+        return cell!
     }
 
+    //////////////////////////////////////////////////////
+    // UITabview Delegate                               //
+    //////////////////////////////////////////////////////
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.000000001
+    }
+    
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        delegate?.contactsView!(self, didSelect: getContact(indexPath: indexPath), and: indexPath.row)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(indexPath)
+    }
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return indexArr
+    }
+    
+    //////////////////////////////////////////////////////
+    // SearchBar Delegate                               //
+    //////////////////////////////////////////////////////
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        isSearching = false
+        searchBar.showsCancelButton = false
+        resultArr = []
+        tableView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            isSearching = false
+        } else {
+            isSearching = true
+            resultArr = searchResult(searchText)
+        }
+        tableView.reloadData()
+    }
+    
+    func searchResult(_ keyWord: String) -> [WGContact] {
+        var array:[WGContact] = []
+        
+        for group in (allContacts?.values.enumerated())! {
+            for contact in group.element.contacts! {
+                if contact.name.uppercased().contains(keyWord) || (contact.address?.uppercased().contains(keyWord))! {
+                    array.append(contact)
+                }
+                
+                for phoneNum in (contact.phoneNum?.value?.enumerated())! {
+                    if phoneNum.element.value.contains(keyWord) {
+                        array.append(contact)
+                    }
+                }
+                
+                for email in (contact.email?.value?.enumerated())! {
+                    if email.element.value.uppercased().contains(keyWord) {
+                        array.append(contact)
+                    }
+                }
+            }
+        }
+        
+        return array
+    }
+    
+    //////////////////////////////////////////////////////
+    // UITabview Datasource                             //
+    //////////////////////////////////////////////////////
+
+    
+    
+    //////////////////////////////////////////////////////
+    // UITabview Datasource                             //
+    //////////////////////////////////////////////////////
 
 
 
