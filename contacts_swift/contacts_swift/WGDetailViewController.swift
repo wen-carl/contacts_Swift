@@ -9,27 +9,58 @@
 import UIKit
 
 class WGDetailViewController: UIViewController {
+    
+    var contact: WGContact?
+    var index: Int?
+    var detailView: WGContactDetailView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        self.title = (contact != nil) ? contact!.name : "Add New Contact";
+        
+        let statusFrame = UIApplication.shared.statusBarFrame
+        let navBarFrame = self.navigationController?.navigationBar.frame
+        let originY = statusFrame.size.height + (navBarFrame?.size.height)!
+        let rect = CGRect.init(x: 0, y: originY, width: self.view.frame.size.width, height: self.view.frame.size.height - originY)
+        detailView = WGContactDetailView.init(frame: rect, and: contact)
+        self.view.addSubview(detailView!)
+        
+        var bar = self.navigationItem.rightBarButtonItem
+        if bar == nil {
+            bar = UIBarButtonItem.init(barButtonSystemItem: ((contact == nil) ? UIBarButtonSystemItem.save : UIBarButtonSystemItem.edit), target: self, action: #selector(onEditOrDone(_:)))
+        } else {
+            bar?.title = ((contact == nil) ? "Save" : "Edit")
+        }
     }
+    
+    func onEditOrDone(_ bar: UIBarButtonItem) -> Void {
+        let title: Bool = bar.title == "Edit"
+        if title {
+            bar.title = "Done"
+        } else {
+            bar.title = "Edit"
+        }
+    }
+    
+    
+    
+    
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
+
+
+
+
+
+
+
+
+
+

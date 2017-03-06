@@ -15,17 +15,18 @@ import UIKit
 class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     var allContacts: [String: WGContactGroup]?
-    var tableView: UITableView!
-    var searchBar: UISearchBar!
+    var tableView: UITableView?
+    var searchBar: UISearchBar?
     var resultArr: [WGContact]?
     var isSearching: Bool?
     var delegate: WGContactsViewDelegate?
     var indexArr: [String] {
-        //return allContacts?.keys.sorted(by: { (key1: String, key2: String) -> Bool in
-        //    return key1.compare(key2)
-        //})
-        return (allContacts?.keys.sorted())!
+        return (allContacts?.keys.sorted(by: { (str1, str2) -> Bool in
+            return str1 < str2
+        }))!
     }
+    
+    // MARK: Make Data
     
     func makeData() {
         let source: [String] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"];
@@ -44,12 +45,10 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
                 let contact = WGContact.init(name: name)
                 contact.phoneNum?.value = [(contact.phoneNum?.indexArr?[0])!: getPhoneNumber(), (contact.phoneNum?.indexArr?[1])!: getPhoneNumber(), (contact.phoneNum?.indexArr?[2])!: getPhoneNumber()]
                 contact.email?.value = [(contact.email?.indexArr?[0])!: "111@qq.com", (contact.email?.indexArr?[1])!: "110@qq.com"]
-                group.contacts?.append(contact)
+                let _ = WGContact.save(contact: contact, replacedContact: nil, index: 0)
             }
             groups[first] = group
         }
-        
-        let _ = WGContact.saveData(groups)
     }
     
     func getPhoneNumber() -> String {
@@ -79,14 +78,37 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
         
         isSearching = false
         searchBar = UISearchBar.init(frame: CGRect.init(x: 0, y: 0, width: frame.size.width, height: 50))
-        searchBar.showsCancelButton = false
-        searchBar.delegate = self
-        self.addSubview(searchBar)
+        searchBar?.showsCancelButton = false
+        searchBar?.delegate = self
+        self.addSubview(searchBar!)
         
         tableView = UITableView.init(frame: CGRect.init(x: 0, y: 50, width: frame.size.width, height: frame.size.height - 50), style: UITableViewStyle.grouped)
-        tableView.dataSource = self
-        tableView.delegate = self
-        self.addSubview(tableView)
+        tableView?.dataSource = self
+        tableView?.delegate = self
+        self.addSubview(tableView!)
+        print(searchBar!.frame)
+        print(tableView!.frame)
+        
+        let center = NotificationCenter.default
+//        block
+        
+//        center.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil, queue: OperationQueue.main) { (Notification) in
+//            let dic = Notification.userInfo
+//            let value = dic?[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+//            let height = value.cgRectValue.size.height
+//            print("height:\(height)")
+//            
+//            var rect = self.tableView.frame
+//            rect.size.height -= height
+//        }
+        center.addObserver(self, selector: #selector(keyboardWillShow(_ :)), name: .UIKeyboardWillShow, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    deinit {
+        print("Remove Observer")
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -97,9 +119,31 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
         return (allContacts![(indexArr[indexPath.section])]?.contacts?[indexPath.row])!
     }
     
-    //////////////////////////////////////////////////////
-    // UITabview Datasource                             //
-    //////////////////////////////////////////////////////
+    // MARK: Notification Methods
+    
+    func keyboardWillShow(_ noti: NSNotification) -> Void {
+        let dic = noti.userInfo
+        let value = dic?[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+        let height = value.cgRectValue.size.height
+        print("height1:\(height)")
+        
+        var rect = tableView!.frame
+        rect.size.height -= height
+        tableView?.frame = rect;
+    }
+    
+    func keyboardWillHide(_ noti: NSNotification) -> Void {
+        let dic = noti.userInfo
+        let value = dic?[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+        let height = value.cgRectValue.size.height
+        print("height2:\(height)")
+        
+        var rect = tableView!.frame
+        rect.size.height += height
+        tableView?.frame = rect
+    }
+    
+    // MARK: UITabview Datasource
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return isSearching! ? 1 : indexArr.count
@@ -130,12 +174,14 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
         return cell!
     }
 
-    //////////////////////////////////////////////////////
-    // UITabview Delegate                               //
-    //////////////////////////////////////////////////////
+    // MARK: UITabview Delegate
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0.000000001
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
     }
     
     func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
@@ -147,12 +193,10 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return indexArr
+        return isSearching! ? nil : indexArr
     }
     
-    //////////////////////////////////////////////////////
-    // SearchBar Delegate                               //
-    //////////////////////////////////////////////////////
+    // MARK: SearchBar Delegate
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
@@ -160,6 +204,12 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        
+        //let toolBar = UIToolbar.init(frame: CGRect.init(x: 0, y: 0, width: self.frame.size.width, height: 30))
+        //toolBar
+        
+        searchBar.inputAccessoryView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: self.frame.size.width, height: 50))
+        searchBar.inputAccessoryView?.backgroundColor = UIColor.cyan
         searchBar.showsCancelButton = true
     }
     
@@ -167,7 +217,7 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
         isSearching = false
         searchBar.showsCancelButton = false
         resultArr = []
-        tableView.reloadData()
+        tableView!.reloadData()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -177,46 +227,48 @@ class WGContactsView: UIView, UITableViewDelegate, UITableViewDataSource, UISear
             isSearching = true
             resultArr = searchResult(searchText)
         }
-        tableView.reloadData()
+        tableView!.reloadData()
     }
     
     func searchResult(_ keyWord: String) -> [WGContact] {
-        var array:[WGContact] = []
+        var set = Set<WGContact>()
         
         for group in (allContacts?.values.enumerated())! {
             for contact in group.element.contacts! {
                 if contact.name.uppercased().contains(keyWord) || (contact.address?.uppercased().contains(keyWord))! {
-                    array.append(contact)
+                    set.insert(contact)
+                    continue
                 }
                 
                 for phoneNum in (contact.phoneNum?.value?.enumerated())! {
                     if phoneNum.element.value.contains(keyWord) {
-                        array.append(contact)
+                        set.insert(contact)
+                        continue
                     }
                 }
                 
                 for email in (contact.email?.value?.enumerated())! {
                     if email.element.value.uppercased().contains(keyWord) {
-                        array.append(contact)
+                        set.insert(contact)
+                        break
                     }
                 }
             }
         }
         
-        return array
+        return Array(set).sorted { (con1, con2) -> Bool in
+            return con1.name < con2.name
+        }
     }
-    
-    //////////////////////////////////////////////////////
-    // UITabview Datasource                             //
-    //////////////////////////////////////////////////////
-
-    
-    
-    //////////////////////////////////////////////////////
-    // UITabview Datasource                             //
-    //////////////////////////////////////////////////////
-
-
 
 
 }
+
+
+
+
+
+
+
+
+

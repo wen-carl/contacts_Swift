@@ -9,6 +9,8 @@
 import UIKit
 
 class WGContactViewController: UIViewController,WGContactsViewDelegate {
+    
+    var contactsView: WGContactsView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,18 +25,36 @@ class WGContactViewController: UIViewController,WGContactsViewDelegate {
         rect.size.height -= H
         print("RECT:\(rect)")
         
-        let contactsView = WGContactsView.init(frame: rect)
-        contactsView.delegate = self
-        self.view.addSubview(contactsView)
+        contactsView = WGContactsView.init(frame: rect)
+        contactsView?.delegate = self
+        self.view.addSubview(contactsView!)
         
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .add, target: self, action: #selector(onAddContact(_:)))
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: NSNotification.Name.init("WGContactDidFinishEditting"), object: nil)
     }
     
-    //////////////////////////////////////////////////////
-    // WGContactsView Delegate                          //
-    //////////////////////////////////////////////////////
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init("WGContactDidFinishEditting"), object: nil)
+    }
+    
+    func onAddContact(_ bar: UIBarButtonItem) -> Void {
+        let detailVC = WGDetailViewController()
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func refreshData() -> Void {
+        contactsView?.setUpData()
+        contactsView?.tableView?.reloadData()
+    }
+    
+    // MARK: WGContactsView Delegate
     
     func contactsView(_ contactsView: WGContactsView, didSelect contact: WGContact, and index: Int) {
-        
+        let detailVC = WGDetailViewController()
+        detailVC.index = index
+        detailVC.contact = contact
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,3 +62,10 @@ class WGContactViewController: UIViewController,WGContactsViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 }
+
+
+
+
+
+
+

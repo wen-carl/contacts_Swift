@@ -20,6 +20,11 @@
 		84C684791E276E1000FD4A05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84C684771E276E1000FD4A05 /* LaunchScreen.storyboard */; };
 		84C684841E276E1000FD4A05 /* contacts_swiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C684831E276E1000FD4A05 /* contacts_swiftTests.swift */; };
 		84C6848F1E276E1000FD4A05 /* contacts_swiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C6848E1E276E1000FD4A05 /* contacts_swiftUITests.swift */; };
+		84D302771E55938200858BF3 /* WGTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D302761E55938200858BF3 /* WGTableHeader.swift */; };
+		84F408251E49A0B4000C5D4E /* WGContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F408241E49A0B4000C5D4E /* WGContactDetailView.swift */; };
+		84F408271E49A8B2000C5D4E /* WGHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F408261E49A8B2000C5D4E /* WGHeaderView.swift */; };
+		84F408291E49A91C000C5D4E /* WGTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F408281E49A91C000C5D4E /* WGTableViewCell.swift */; };
+		84F7AA201E4DA64C007364BD /* address.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84F7AA1F1E4DA64C007364BD /* address.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +64,11 @@
 		84C6848A1E276E1000FD4A05 /* contacts_swiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = contacts_swiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C6848E1E276E1000FD4A05 /* contacts_swiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contacts_swiftUITests.swift; sourceTree = "<group>"; };
 		84C684901E276E1000FD4A05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84D302761E55938200858BF3 /* WGTableHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGTableHeader.swift; sourceTree = "<group>"; };
+		84F408241E49A0B4000C5D4E /* WGContactDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGContactDetailView.swift; sourceTree = "<group>"; };
+		84F408261E49A8B2000C5D4E /* WGHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGHeaderView.swift; sourceTree = "<group>"; };
+		84F408281E49A91C000C5D4E /* WGTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WGTableViewCell.swift; sourceTree = "<group>"; };
+		84F7AA1F1E4DA64C007364BD /* address.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = address.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +109,10 @@
 			isa = PBXGroup;
 			children = (
 				84919C621E2A15F400AE35E7 /* WGContactsView.swift */,
+				84F408241E49A0B4000C5D4E /* WGContactDetailView.swift */,
+				84F408261E49A8B2000C5D4E /* WGHeaderView.swift */,
+				84F408281E49A91C000C5D4E /* WGTableViewCell.swift */,
+				84D302761E55938200858BF3 /* WGTableHeader.swift */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -115,6 +129,7 @@
 		84C684621E276E1000FD4A05 = {
 			isa = PBXGroup;
 			children = (
+				84F7AA1F1E4DA64C007364BD /* address.plist */,
 				84919C5E1E2A15E400AE35E7 /* contact.png */,
 				84C6846D1E276E1000FD4A05 /* contacts_swift */,
 				84C684821E276E1000FD4A05 /* contacts_swiftTests */,
@@ -280,6 +295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84C684791E276E1000FD4A05 /* LaunchScreen.storyboard in Resources */,
+				84F7AA201E4DA64C007364BD /* address.plist in Resources */,
 				84C684761E276E1000FD4A05 /* Assets.xcassets in Resources */,
 				84919C5F1E2A15E400AE35E7 /* contact.png in Resources */,
 				84C684741E276E1000FD4A05 /* Main.storyboard in Resources */,
@@ -308,12 +324,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				84C684711E276E1000FD4A05 /* ViewController.swift in Sources */,
+				84F408271E49A8B2000C5D4E /* WGHeaderView.swift in Sources */,
 				84919C681E2A15F400AE35E7 /* WGContactViewController.swift in Sources */,
 				84919C651E2A15F400AE35E7 /* WGContact.swift in Sources */,
+				84D302771E55938200858BF3 /* WGTableHeader.swift in Sources */,
 				84919C691E2A15F400AE35E7 /* WGDetailViewController.swift in Sources */,
+				84F408251E49A0B4000C5D4E /* WGContactDetailView.swift in Sources */,
 				84919C661E2A15F400AE35E7 /* WGContactGroup.swift in Sources */,
 				84919C671E2A15F400AE35E7 /* WGContactsView.swift in Sources */,
 				84C6846F1E276E1000FD4A05 /* AppDelegate.swift in Sources */,
+				84F408291E49A91C000C5D4E /* WGTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

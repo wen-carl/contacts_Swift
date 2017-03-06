@@ -56,11 +56,7 @@ class WGContact: NSObject,NSCoding {
     var email: simpleModel?
     var birthday: [String: Int]?
     var group: String {
-        return self.getGroupName()
-    }
-    
-    func getGroupName() -> String {
-        return self.name.substring(to: self.name.startIndex)
+        return self.name.substring(to: self.name.index(after: self.name.startIndex))
     }
     
     init(name: String) {
@@ -92,40 +88,52 @@ class WGContact: NSObject,NSCoding {
         aCoder.encode(email, forKey: key_email)
     }
     
-    class func getContactsPath() -> String {
-        let path: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-        return path + "/contacts.plist"
-    }
-    
-    class func saveData(_ contacts: [String: WGContactGroup]) -> Bool {
-//        let data = NSMutableData()
-//        let archiver = NSKeyedArchiver(forWritingWith: data)
-//        archiver.encode(contacts, forKey: "key_contacts")
-//        archiver.finishEncoding()
-//        return data.write(toFile: getContactsPath(), atomically: true)
-        
-        return NSKeyedArchiver.archiveRootObject(contacts, toFile: getContactsPath())
-    }
+    // MARK: Get Data
     
     class func loadData() -> [String: WGContactGroup] {
-        //let fileManager = FileManager()
         var contacts: [String: WGContactGroup] = [:]
         
         if NSKeyedUnarchiver.unarchiveObject(withFile: getContactsPath()) != nil {
             contacts = NSKeyedUnarchiver.unarchiveObject(withFile: getContactsPath()) as! [String : WGContactGroup]
         }
         
-//        if fileManager.fileExists(atPath: getContactsPath()) {
-//            let url = URL.init(string: getContactsPath())
-//            let data = try! Data.init(contentsOf: url!, options: Data.ReadingOptions.alwaysMapped)
-//            
-//            let unArchiver = NSKeyedUnarchiver(forReadingWith: data)
-//            contacts = unArchiver.decodeObject(forKey: "key_contacts") as! [String : WGContactGroup]
-//            unArchiver.finishDecoding()
-//        }
-        
         return contacts
     }
+    
+    class func getContactsPath() -> String {
+        let path: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+        return path + "/contacts.plist"
+    }
+    
+    // MARK: Save Data
+    
+    class func save(contact: WGContact, replacedContact: WGContact?, index: Int) -> Bool {
+        var contacts: [String: WGContactGroup]? = loadData()
+        
+        if replacedContact != nil {
+            let oldGroup = contacts?[(replacedContact?.group)!]
+            oldGroup?.contacts?.remove(at: index)
+        }
+        
+        var group: WGContactGroup? = contacts?[contact.group]
+        if group != nil {
+            group?.contacts?.append(contact)
+            group?.contacts = group?.contacts?.sorted(by: { (contact1, contact2) -> Bool in
+                return contact1.name < contact2.name
+            })
+        } else {
+            group = WGContactGroup.init(name: contact.group)
+            group?.contacts?.append(contact)
+        }
+        contacts?[(group?.name)!] = group
+        
+        return saveData(contacts!)
+    }
+    
+    class func saveData(_ contacts: [String: WGContactGroup]) -> Bool {
+        return NSKeyedArchiver.archiveRootObject(contacts, toFile: getContactsPath())
+    }
+    
     
     
     
